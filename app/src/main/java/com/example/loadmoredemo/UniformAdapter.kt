@@ -18,13 +18,21 @@ class UniformAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var isLoading = false
      fun setData(list : ArrayList<Content>){
         this.listUniform = list
-        notifyDataSetChanged()
     }
-
     class UniformViewholder(itemView: View) : RecyclerView.ViewHolder(itemView){
+        //todo interface
+        //todo different Recyclerview
+        //todo animation items
+        //todo multy select items
+        fun onItemsclick(){
+
+        }
     }
 
     class LoadingViewholder(itemView: View): RecyclerView.ViewHolder(itemView){
+
+    }
+    class blankViewholder(itemView: View): RecyclerView.ViewHolder(itemView){
 
     }
 

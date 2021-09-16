@@ -7,8 +7,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 class ApiExacutor{
-    private val logger = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS)
-    private val okHttp = OkHttpClient.Builder().addInterceptor(logger)
+    private val logBody = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+    private val logHeaders = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS)
+    private val okHttp = OkHttpClient.Builder().addInterceptor(logBody).addInterceptor(logHeaders)
     val BASE_URL = "https://youngkids-dev.acaziasoft.com/"
     val callapi  = Retrofit.Builder()
             .baseUrl(BASE_URL)
