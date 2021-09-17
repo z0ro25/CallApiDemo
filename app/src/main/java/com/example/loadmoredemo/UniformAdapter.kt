@@ -9,30 +9,42 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.product_item.view.*
 import java.lang.IllegalArgumentException
 
-class UniformAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+//todo interface
+//todo different Recyclerview
+//todo animation items
+//todo multy select items
+class UniformAdapter(private  val iner : iUnfadapter) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val STATICS = "statics/"
     private val BASE_URL = "https://youngkids-dev.acaziasoft.com/"
-    private var listUniform : ArrayList<Content> = ArrayList()
-    private val TYPE_DATA  = 0
-    private val TYPE_LOADING  = 1
+    private var listUniform: ArrayList<Content> = ArrayList()
+    private val TYPE_DATA = 0
+    private val TYPE_LOADING = 1
     private var isLoading = false
-     fun setData(list : ArrayList<Content>){
-        this.listUniform = list
-    }
-    class UniformViewholder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        //todo interface
-        //todo different Recyclerview
-        //todo animation items
-        //todo multy select items
-        fun onItemsclick(){
 
+    fun setData(list: ArrayList<Content>) {
+        this.listUniform = list
+        notifyDataSetChanged()
+    }
+
+    interface iUnfadapter {
+        fun onItemClick(position: Int)
+    }
+
+    class UniformViewholder(itemView: View,iner : iUnfadapter) : RecyclerView.ViewHolder(itemView) {
+
+        init {
+            itemView.setOnClickListener{
+                iner.onItemClick(adapterPosition)
+            }
         }
     }
 
-    class LoadingViewholder(itemView: View): RecyclerView.ViewHolder(itemView){
+
+    class LoadingViewholder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     }
-    class blankViewholder(itemView: View): RecyclerView.ViewHolder(itemView){
+
+    class blankViewholder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     }
 
@@ -41,7 +53,7 @@ class UniformAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             TYPE_DATA -> {
                 val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.product_item, parent, false)
-                return UniformViewholder(view)
+                return UniformViewholder(view,iner)
             }
             TYPE_LOADING -> {
                 val view = LayoutInflater.from(parent.context)
@@ -53,23 +65,24 @@ class UniformAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder.itemViewType == TYPE_DATA){
+        if (holder.itemViewType == TYPE_DATA) {
             holder.itemView.tv_name.text = listUniform.get(position).name
             holder.itemView.tv_description.text = listUniform.get(position).description
             holder.itemView.tv_price.text = listUniform.get(position).price.toString()
             val imgUrl = listUniform.get(position).image
             Picasso.get()
-                .load(BASE_URL + STATICS + imgUrl )
+                .load(BASE_URL + STATICS + imgUrl)
                 .into(holder.itemView.img_icon)
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (listUniform!=null && position == listUniform.size-1 && isLoading){
+        if (listUniform != null && position == listUniform.size - 1 && isLoading) {
             return TYPE_LOADING
         }
         return TYPE_DATA
     }
+
     override fun getItemCount(): Int {
         if (listUniform != null)
             return listUniform.size
