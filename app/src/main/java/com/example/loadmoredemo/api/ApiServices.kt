@@ -14,4 +14,9 @@ interface ApiServices {
                 @Query("size") size:Int,
                 @Query("sort") sort:String,
     ) : Call<Uniform>
+
+    @GET("v1/api/public/products/")
+    fun callId(@Query("id") id:String,
+
+    ) : Call<Uniform>
 }

@@ -1,10 +1,11 @@
-package com.example.loadmoredemo
+package com.example.loadmoredemo.adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.loadmoredemo.ApiModel.Content
+import com.example.loadmoredemo.R
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.product_item.view.*
 import java.lang.IllegalArgumentException
@@ -67,12 +68,15 @@ class UniformAdapter(private  val iner : iUnfadapter) : RecyclerView.Adapter<Rec
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder.itemViewType == TYPE_DATA) {
             holder.itemView.tv_name.text = listUniform.get(position).name
-            holder.itemView.tv_description.text = listUniform.get(position).description
             holder.itemView.tv_price.text = listUniform.get(position).price.toString()
             val imgUrl = listUniform.get(position).image
             Picasso.get()
                 .load(BASE_URL + STATICS + imgUrl)
                 .into(holder.itemView.img_icon)
+            val isfavorite = listUniform.get(position).isfavorite
+            if (isfavorite == true){
+                holder.itemView.favorite_icon.setImageResource(R.drawable.baseline_favorite_red_500_24dp)
+            }else holder.itemView.favorite_icon.setImageResource(R.drawable.baseline_favorite_border_red_500_24dp)
         }
     }
 
