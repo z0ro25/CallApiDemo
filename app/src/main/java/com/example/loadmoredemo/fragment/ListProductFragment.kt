@@ -1,7 +1,6 @@
 package com.example.loadmoredemo.fragment
 
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -17,10 +16,13 @@ import com.example.loadmoredemo.ApiModel.Uniform
 import com.example.loadmoredemo.ItemsDetailActivity
 import com.example.loadmoredemo.R
 import com.example.loadmoredemo.Sharedpreferences.SharedPreferencesFavorite
-import com.example.loadmoredemo.`interface`.PassDataInterface
 import com.example.loadmoredemo.adapter.UniformAdapter
 import com.example.loadmoredemo.api.ApiExacutor
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_list_product.*
+import kotlinx.android.synthetic.main.item_detail_layout.*
+import kotlinx.android.synthetic.main.product_item.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -30,7 +32,7 @@ import retrofit2.Response
 class ListProductFragment : Fragment() , UniformAdapter.iUnfadapter{
     private val unfAdapter = UniformAdapter(this)
     private var listProdcut: ArrayList<Content> = ArrayList()
-    private var listFAV: ArrayList<Content> = ArrayList()
+    private var listFAV: HashMap<String,Content> = hashMapOf()
     private val sort = "update_date:asc,quantity_sold:desc"
     private val api = ApiExacutor()
     private var isLoading: Boolean = true
@@ -59,7 +61,7 @@ class ListProductFragment : Fragment() , UniformAdapter.iUnfadapter{
         RCV_product.addItemDecoration(itemDecorationCount)
         RCV_product.adapter = unfAdapter
         loadProdcut(currenPage, pageSize, sort)
-
+        updateListFAV()
 
         RCV_product.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -88,9 +90,18 @@ class ListProductFragment : Fragment() , UniformAdapter.iUnfadapter{
             canLoadMore = true
 
         }
-
     }
 
+    private fun updateListFAV() {
+        val favShaed = SharedPreferencesFavorite(requireActivity().application)
+        val gson = Gson()
+        val getLFAV = favShaed.getListFAV("SAVE_KEY"," ")
+        val list :HashMap<String,Content> = gson.fromJson(getLFAV,object : TypeToken<HashMap<String,Content>> () {}.type)
+        list.forEach{
+            listFAV.put(it.key,it.value)
+        }
+        Log.i("updatelist",listFAV.size.toString())
+    }
 
 
     private fun loadMore() {
@@ -130,9 +141,9 @@ class ListProductFragment : Fragment() , UniformAdapter.iUnfadapter{
 
 
     override fun onItemClick(position: Int) {
-        val inten = Intent(activity?.applicationContext,ItemsDetailActivity::class.java)
+        val inten = Intent(requireActivity().application,ItemsDetailActivity::class.java)
         inten.putExtra("litsproduct",listProdcut.get(position))
-//        inten.putExtra("post",position)
+        inten.putExtra("litsFAV",listFAV)
         startActivity(inten)
     }
 }

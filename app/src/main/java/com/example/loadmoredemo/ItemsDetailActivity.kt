@@ -58,9 +58,11 @@ class ItemsDetailActivity : AppCompatActivity() {
                 btn_favorite.setImageResource(R.drawable.baseline_favorite_border_red_500_24dp)
                 isFavorite = false
                 clickedItems?.isfavorite = false
+
             }
         }
     }
+
 
     private fun getParam() {
         val inten = intent
@@ -76,19 +78,18 @@ class ItemsDetailActivity : AppCompatActivity() {
 
     private fun saveToSharedPreferences() {
 
-            var KeyNumber = 0
-            val json = sharedFAV.getListFAV(SAVE_KEY, "")
-            val gson = Gson()
-            val listF: HashMap<String,Content> = gson.fromJson(json, object : TypeToken< HashMap<String,Content>>() {}.type)
-                Log.i("FAV", listF.toString())
-            if (listF.isEmpty()) {
-                listF.put(KeyNumber.toString(),clickedItems!!)
-            } else if (listF.containsValue(clickedItems!!) == false) {
-                listF.put(KeyNumber.toString() ,clickedItems!!)
-            }
-            sharedFAV.saveListFAV(SAVE_KEY, listF)
-            KeyNumber += 1
-         Log.i("listFAV", listF.size.toString())
+        val intet = intent
+        val listF = intet.getSerializableExtra("litsFAV") as HashMap<String, Content>
+        Log.i("FAV", listF.toString())
+        if (listF.isEmpty()) {
+            listF.put(clickedItems!!.id.toString(), clickedItems!!)
+        } else if (listF.containsValue(clickedItems!!) == false) {
+            listF.put(clickedItems!!.id.toString(), clickedItems!!)
+        }
+        sharedFAV.saveListFAV(SAVE_KEY, listF)
+
+        Log.i("listFAV", listF.size.toString())
+        Log.i("listFAVKey", listF.keys.toString())
     }
 
     private fun saveToDatabase() {

@@ -1,7 +1,5 @@
 package com.example.loadmoredemo.fragment
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,7 +14,7 @@ import com.example.loadmoredemo.adapter.FavoriteAdapter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.favorite_fragment_layout.*
-import kotlin.math.log
+
 
 class FavoriteFragment : Fragment() {
     private var listFavoriteproduct: ArrayList<Content> = ArrayList()
